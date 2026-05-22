@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <!-- Отключаем масштабирование и подстраиваем вьюпорт под телефоны -->
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Кликер | Игра на телефон и ПК</title>
     <style>
@@ -10,8 +10,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* Чтобы текст не выделялся при тапах на телефоне */
-            -webkit-tap-highlight-color: transparent; /* Убираем серый фон при нажатии на мобилках */
+            user-select: none; 
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -22,11 +22,11 @@
             align-items: center;
             justify-content: center;
             padding: 16px;
-            /* Защита от случайных скроллов на телефоне */
+            
             touch-action: pan-y pinch-zoom;
         }
 
-        /* Контейнер гибко подстраивается под любые экраны */
+        
         .game-container {
             max-width: 1400px;
             width: 100%;
@@ -38,7 +38,7 @@
             align-items: center;
         }
 
-        /* Левая панель — на телефоне будет снизу или справа, но читаемо */
+        
         .upgrades-panel {
             flex: 1;
             min-width: 260px;
@@ -47,7 +47,7 @@
             padding: 24px 20px;
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
             border: 1px solid #ffe2e7;
-            /* Сглаживание для тапов */
+           
             touch-action: manipulation;
         }
 
@@ -136,7 +136,7 @@
             transform: none;
         }
 
-        /* Центральная часть — главная кнопка и статистика */
+       
         .center-love {
             flex: 2;
             min-width: 300px;
@@ -157,7 +157,7 @@
             border: 1px solid #ffe0e5;
         }
 
-        /* Огромный счетчик — отлично видно и на телефоне */
+       
         .clicks-count {
             font-size: 4rem;
             font-weight: 900;
@@ -201,7 +201,7 @@
             margin-right: 8px;
         }
 
-        /* ГЛАВНАЯ КНОПКА — огромная, удобная для пальца */
+       
         .love-button {
             background-color: #ff4d6d;
             border: none;
@@ -219,7 +219,7 @@
             max-width: 480px;
             letter-spacing: 0.02em;
             white-space: nowrap;
-            /* Улучшение для тач-событий */
+          
             touch-action: manipulation;
         }
 
@@ -228,7 +228,7 @@
             background-color: #e6003a;
         }
 
-        /* Адаптация для маленьких телефонов */
+      
         @media (max-width: 650px) {
             .game-container {
                 gap: 20px;
@@ -279,7 +279,7 @@
             }
         }
 
-        /* Анимации для сердечек */
+    
         .heart-float {
             position: fixed;
             pointer-events: none;
@@ -308,7 +308,7 @@
 </head>
 <body>
 <div class="game-container">
-    <!-- Панель улучшений -->
+
     <div class="upgrades-panel">
         <div class="upgrades-title">
             <span>✨</span> Улучшения <span>💖</span>
@@ -345,7 +345,7 @@
         </div>
     </div>
 
-    <!-- Центр: кнопка и счетчики -->
+    
     <div class="center-love">
         <div class="stats">
             <div class="clicks-count">
@@ -362,19 +362,19 @@
 </div>
 
 <script>
-    // ------ Игровая механика ------
+    
     let totalClicks = 0;
-    let clickBonus = 0;           // дополнительных кликов за нажатие (уровень силы клика)
-    let passiveIncome = 0;        // кликов в секунду от автокликера
+    let clickBonus = 0;           
+    let passiveIncome = 0;        
     
     let clickUpgradeLevel = 0;
     let cpsUpgradeLevel = 0;
     
-    // Цены на улучшения (каждый раз удваиваются)
+   
     let currentClickPrice = 200;
     let currentCpsPrice = 200;
     
-    // DOM элементы
+    
     const totalSpan = document.getElementById('totalClicks');
     const cpsSpan = document.getElementById('clicksPerSec');
     const clickUpgradeLevelSpan = document.getElementById('clickUpgradeLevel');
@@ -386,10 +386,9 @@
     const buyCpsBtn = document.getElementById('buyCpsUpgradeBtn');
     const mainBtn = document.getElementById('mainLoveBtn');
     
-    // Для подсчёта активных кликов в секунду
+   
     let clickTimestamps = [];
     
-    // Обновление отображаемого значения кликов в секунду (активные + пассивные)
     function updateCPSDisplay() {
         const now = Date.now();
         clickTimestamps = clickTimestamps.filter(ts => now - ts < 1000);
@@ -398,7 +397,7 @@
         cpsSpan.innerText = totalCPS;
     }
     
-    // Добавление кликов (основная механика)
+ 
     function addClicks(baseAmount = 1, fromPassive = false) {
         if (!fromPassive) {
             clickTimestamps.push(Date.now());
@@ -414,7 +413,7 @@
         return gained;
     }
     
-    // Обновление интерфейса: счётчик, цены, активность кнопок
+    
     function updateUI() {
         totalSpan.innerText = Math.floor(totalClicks);
         clickUpgradeLevelSpan.innerText = `Уровень: ${clickUpgradeLevel}`;
@@ -422,7 +421,7 @@
         clickUpgradePriceSpan.innerText = `${currentClickPrice} ❤️`;
         cpsUpgradePriceSpan.innerText = `${currentCpsPrice} ❤️`;
         
-        // Блокировка кнопок если не хватает кликов
+        
         if (totalClicks >= currentClickPrice) {
             buyClickBtn.classList.remove('disabled');
             buyClickBtn.disabled = false;
@@ -440,13 +439,13 @@
         }
     }
     
-    // Покупка улучшения "Сила клика"
+  
     function buyClickUpgrade() {
         if (totalClicks >= currentClickPrice) {
             totalClicks -= currentClickPrice;
             clickUpgradeLevel++;
             clickBonus = clickUpgradeLevel;
-            currentClickPrice *= 2;   // цена удваивается
+            currentClickPrice *= 2; 
             updateUI();
             showFloatingMessage("✨ +1 к силе клика ✨", "#e63946");
         } else {
@@ -454,13 +453,13 @@
         }
     }
     
-    // Покупка улучшения "Автокликер"
+  
     function buyCpsUpgrade() {
         if (totalClicks >= currentCpsPrice) {
             totalClicks -= currentCpsPrice;
             cpsUpgradeLevel++;
             passiveIncome = cpsUpgradeLevel;
-            currentCpsPrice *= 2;    // цена удваивается
+            currentCpsPrice *= 2; 
             updateUI();
             showFloatingMessage("💓 +1 клик/сек 💓", "#2a9d8f");
         } else {
@@ -468,7 +467,7 @@
         }
     }
     
-    // Всплывающее уведомление
+
     function showFloatingMessage(msg, color) {
         const div = document.createElement('div');
         div.innerText = msg;
@@ -491,7 +490,7 @@
         setTimeout(() => div.remove(), 900);
     }
     
-    // Эффект сердечек при клике (красиво и на телефоне)
+
     function createHeartExplosion(clientX, clientY) {
         const heartsCount = Math.floor(Math.random() * 5) + 3;
         for (let i = 0; i < heartsCount; i++) {
@@ -511,18 +510,18 @@
         }
     }
     
-    // --- Обработчик нажатия на главную кнопку (работает и для мыши, и для пальца) ---
+
     function onMainTap(event) {
-        // Получаем координаты касания/клика для эффекта сердечек
+   
         let clientX, clientY;
         if (event.touches) {
-            // Мобильное устройство
+
             const touch = event.touches[0];
             clientX = touch.clientX;
             clientY = touch.clientY;
-            event.preventDefault();   // предотвращаем зумирование или скролл при тапе
+            event.preventDefault();  
         } else {
-            // Компьютерная мышь
+
             clientX = event.clientX;
             clientY = event.clientY;
         }
@@ -530,12 +529,12 @@
         const gained = addClicks(1, false);
         createHeartExplosion(clientX, clientY);
         
-        // Вибрация (если устройство поддерживает, на андроидах работает, на айфонах ограничено)
+
         if (window.navigator && window.navigator.vibrate) {
             window.navigator.vibrate(30);
         }
         
-        // Короткий всплывающий +знак
+
         const plus = document.createElement('div');
         plus.innerText = `+${gained}`;
         plus.style.position = 'fixed';
@@ -556,7 +555,7 @@
         }, 10);
     }
     
-    // --- Пассивный доход (тикает каждую секунду) ---
+
     let passiveInterval = null;
     function startPassiveIncome() {
         if (passiveInterval) clearInterval(passiveInterval);
@@ -565,12 +564,12 @@
                 totalClicks += passiveIncome;
                 updateUI();
                 updateCPSDisplay();
-                // Можно добавить микро-анимацию, но не обязательно
+
             }
         }, 1000);
     }
     
-    // --- Инициализация и привязка событий для ПК и телефона ---
+
     function initGame() {
         totalClicks = 0;
         clickBonus = 0;
@@ -584,8 +583,7 @@
         updateUI();
         updateCPSDisplay();
         startPassiveIncome();
-        
-        // Кнопки улучшений (общие для мыши и тача)
+
         buyClickBtn.onclick = (e) => {
             e.stopPropagation();
             buyClickUpgrade();
@@ -594,17 +592,16 @@
             e.stopPropagation();
             buyCpsUpgrade();
         };
-        
-        // Главная кнопка: поддерживаем и клик мыши, и касание (touchstart даёт лучший отклик на телефоне)
+
         mainBtn.onclick = (e) => {
             onMainTap(e);
         };
         mainBtn.ontouchstart = (e) => {
-            e.preventDefault();   // чтобы не было задержки 300ms и не дублировалось событие
+            e.preventDefault();
             onMainTap(e);
         };
         
-        // Обновляем отображение кликов в секунду каждые 300 мс
+
         setInterval(() => {
             updateCPSDisplay();
         }, 300);
