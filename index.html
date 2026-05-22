@@ -1,16 +1,15 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Кликер | Игра на телефон и ПК</title>
+    <title>Кликер | Радуга</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; 
+            user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -22,11 +21,9 @@
             align-items: center;
             justify-content: center;
             padding: 16px;
-            
             touch-action: pan-y pinch-zoom;
         }
 
-        
         .game-container {
             max-width: 1400px;
             width: 100%;
@@ -38,7 +35,6 @@
             align-items: center;
         }
 
-        
         .upgrades-panel {
             flex: 1;
             min-width: 260px;
@@ -47,7 +43,6 @@
             padding: 24px 20px;
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
             border: 1px solid #ffe2e7;
-           
             touch-action: manipulation;
         }
 
@@ -136,7 +131,6 @@
             transform: none;
         }
 
-       
         .center-love {
             flex: 2;
             min-width: 300px;
@@ -157,7 +151,6 @@
             border: 1px solid #ffe0e5;
         }
 
-       
         .clicks-count {
             font-size: 4rem;
             font-weight: 900;
@@ -201,7 +194,6 @@
             margin-right: 8px;
         }
 
-       
         .love-button {
             background-color: #ff4d6d;
             border: none;
@@ -212,23 +204,20 @@
             font-family: inherit;
             color: white;
             cursor: pointer;
-            box-shadow: 0 25px 35px -12px rgba(255, 77, 109, 0.5);
-            transition: transform 0.08s linear, background 0.1s;
+            box-shadow: 0 25px 35px -12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.08s linear, background-color 0.2s ease;
             text-align: center;
             width: 100%;
             max-width: 480px;
             letter-spacing: 0.02em;
             white-space: nowrap;
-          
             touch-action: manipulation;
         }
 
         .love-button:active {
             transform: scale(0.96);
-            background-color: #e6003a;
         }
 
-      
         @media (max-width: 650px) {
             .game-container {
                 gap: 20px;
@@ -279,7 +268,6 @@
             }
         }
 
-    
         .heart-float {
             position: fixed;
             pointer-events: none;
@@ -308,7 +296,6 @@
 </head>
 <body>
 <div class="game-container">
-
     <div class="upgrades-panel">
         <div class="upgrades-title">
             <span>✨</span> Улучшения <span>💖</span>
@@ -345,7 +332,6 @@
         </div>
     </div>
 
-    
     <div class="center-love">
         <div class="stats">
             <div class="clicks-count">
@@ -362,18 +348,14 @@
 </div>
 
 <script>
-    
     let totalClicks = 0;
-    let clickBonus = 0;           
-    let passiveIncome = 0;        
-    
+    let clickBonus = 0;
+    let passiveIncome = 0;
     let clickUpgradeLevel = 0;
     let cpsUpgradeLevel = 0;
-    
-   
     let currentClickPrice = 200;
     let currentCpsPrice = 200;
-    
+    let clickTimestamps = [];
     
     const totalSpan = document.getElementById('totalClicks');
     const cpsSpan = document.getElementById('clicksPerSec');
@@ -381,13 +363,21 @@
     const clickUpgradePriceSpan = document.getElementById('clickUpgradePrice');
     const cpsUpgradeLevelSpan = document.getElementById('cpsUpgradeLevel');
     const cpsUpgradePriceSpan = document.getElementById('cpsUpgradePrice');
-    
     const buyClickBtn = document.getElementById('buyClickUpgradeBtn');
     const buyCpsBtn = document.getElementById('buyCpsUpgradeBtn');
     const mainBtn = document.getElementById('mainLoveBtn');
     
-   
-    let clickTimestamps = [];
+    const rainbowColors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+    let lastColorIndex = -1;
+    
+    function getRandomRainbowColor() {
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * rainbowColors.length);
+        } while (newIndex === lastColorIndex && rainbowColors.length > 1);
+        lastColorIndex = newIndex;
+        return rainbowColors[newIndex];
+    }
     
     function updateCPSDisplay() {
         const now = Date.now();
@@ -397,7 +387,35 @@
         cpsSpan.innerText = totalCPS;
     }
     
- 
+    function saveGame() {
+        const saveData = {
+            totalClicks: totalClicks,
+            clickBonus: clickBonus,
+            passiveIncome: passiveIncome,
+            clickUpgradeLevel: clickUpgradeLevel,
+            cpsUpgradeLevel: cpsUpgradeLevel,
+            currentClickPrice: currentClickPrice,
+            currentCpsPrice: currentCpsPrice
+        };
+        localStorage.setItem('clickerSave', JSON.stringify(saveData));
+    }
+    
+    function loadGame() {
+        const saved = localStorage.getItem('clickerSave');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                totalClicks = data.totalClicks || 0;
+                clickBonus = data.clickBonus || 0;
+                passiveIncome = data.passiveIncome || 0;
+                clickUpgradeLevel = data.clickUpgradeLevel || 0;
+                cpsUpgradeLevel = data.cpsUpgradeLevel || 0;
+                currentClickPrice = data.currentClickPrice || 200;
+                currentCpsPrice = data.currentCpsPrice || 200;
+            } catch(e) {}
+        }
+    }
+    
     function addClicks(baseAmount = 1, fromPassive = false) {
         if (!fromPassive) {
             clickTimestamps.push(Date.now());
@@ -410,9 +428,9 @@
         totalClicks += gained;
         updateUI();
         updateCPSDisplay();
+        saveGame();
         return gained;
     }
-    
     
     function updateUI() {
         totalSpan.innerText = Math.floor(totalClicks);
@@ -420,7 +438,6 @@
         cpsUpgradeLevelSpan.innerText = `Уровень: ${cpsUpgradeLevel}`;
         clickUpgradePriceSpan.innerText = `${currentClickPrice} ❤️`;
         cpsUpgradePriceSpan.innerText = `${currentCpsPrice} ❤️`;
-        
         
         if (totalClicks >= currentClickPrice) {
             buyClickBtn.classList.remove('disabled');
@@ -439,35 +456,34 @@
         }
     }
     
-  
     function buyClickUpgrade() {
         if (totalClicks >= currentClickPrice) {
             totalClicks -= currentClickPrice;
             clickUpgradeLevel++;
             clickBonus = clickUpgradeLevel;
-            currentClickPrice *= 2; 
+            currentClickPrice *= 2;
             updateUI();
+            saveGame();
             showFloatingMessage("✨ +1 к силе клика ✨", "#e63946");
         } else {
             showFloatingMessage("💔 Не хватает кликов 💔", "#b0003a");
         }
     }
     
-  
     function buyCpsUpgrade() {
         if (totalClicks >= currentCpsPrice) {
             totalClicks -= currentCpsPrice;
             cpsUpgradeLevel++;
             passiveIncome = cpsUpgradeLevel;
-            currentCpsPrice *= 2; 
+            currentCpsPrice *= 2;
             updateUI();
+            saveGame();
             showFloatingMessage("💓 +1 клик/сек 💓", "#2a9d8f");
         } else {
             showFloatingMessage("💔 Не хватает кликов 💔", "#b0003a");
         }
     }
     
-
     function showFloatingMessage(msg, color) {
         const div = document.createElement('div');
         div.innerText = msg;
@@ -490,7 +506,6 @@
         setTimeout(() => div.remove(), 900);
     }
     
-
     function createHeartExplosion(clientX, clientY) {
         const heartsCount = Math.floor(Math.random() * 5) + 3;
         for (let i = 0; i < heartsCount; i++) {
@@ -510,18 +525,16 @@
         }
     }
     
-
+    let clicksSinceLastColor = 0;
+    
     function onMainTap(event) {
-   
         let clientX, clientY;
         if (event.touches) {
-
             const touch = event.touches[0];
             clientX = touch.clientX;
             clientY = touch.clientY;
-            event.preventDefault();  
+            event.preventDefault();
         } else {
-
             clientX = event.clientX;
             clientY = event.clientY;
         }
@@ -529,12 +542,19 @@
         const gained = addClicks(1, false);
         createHeartExplosion(clientX, clientY);
         
-
+        clicksSinceLastColor += gained;
+        
+        if (clicksSinceLastColor >= 100) {
+            const newColor = getRandomRainbowColor();
+            mainBtn.style.backgroundColor = newColor;
+            clicksSinceLastColor = clicksSinceLastColor - 100;
+            showFloatingMessage("🌈 РАДУГА! 🌈", "#ff4d6d");
+        }
+        
         if (window.navigator && window.navigator.vibrate) {
             window.navigator.vibrate(30);
         }
         
-
         const plus = document.createElement('div');
         plus.innerText = `+${gained}`;
         plus.style.position = 'fixed';
@@ -555,7 +575,6 @@
         }, 10);
     }
     
-
     let passiveInterval = null;
     function startPassiveIncome() {
         if (passiveInterval) clearInterval(passiveInterval);
@@ -564,26 +583,21 @@
                 totalClicks += passiveIncome;
                 updateUI();
                 updateCPSDisplay();
-
+                saveGame();
             }
         }, 1000);
     }
     
-
     function initGame() {
-        totalClicks = 0;
-        clickBonus = 0;
-        passiveIncome = 0;
-        clickUpgradeLevel = 0;
-        cpsUpgradeLevel = 0;
-        currentClickPrice = 200;
-        currentCpsPrice = 200;
-        clickTimestamps = [];
-        
+        loadGame();
         updateUI();
         updateCPSDisplay();
         startPassiveIncome();
-
+        
+        clicksSinceLastColor = 0;
+        mainBtn.style.backgroundColor = '#ff4d6d';
+        lastColorIndex = -1;
+        
         buyClickBtn.onclick = (e) => {
             e.stopPropagation();
             buyClickUpgrade();
@@ -592,7 +606,7 @@
             e.stopPropagation();
             buyCpsUpgrade();
         };
-
+        
         mainBtn.onclick = (e) => {
             onMainTap(e);
         };
@@ -601,7 +615,6 @@
             onMainTap(e);
         };
         
-
         setInterval(() => {
             updateCPSDisplay();
         }, 300);
