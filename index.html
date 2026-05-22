@@ -1,9 +1,9 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Кликер | Радуга</title>
+    <title>Кликер | Радуга + Тряска</title>
     <style>
         * {
             margin: 0;
@@ -22,6 +22,18 @@
             justify-content: center;
             padding: 16px;
             touch-action: pan-y pinch-zoom;
+            transition: transform 0.1s cubic-bezier(0.2, 1.2, 0.8, 1);
+        }
+
+        body.shake-effect {
+            animation: screenShake 0.15s cubic-bezier(0.25, 1.5, 0.5, 1) 2;
+        }
+
+        @keyframes screenShake {
+            0% { transform: translateX(0px) rotate(0deg); }
+            25% { transform: translateX(12px) rotate(1deg); }
+            75% { transform: translateX(-10px) rotate(-1deg); }
+            100% { transform: translateX(0px) rotate(0deg); }
         }
 
         .game-container {
@@ -205,7 +217,7 @@
             color: white;
             cursor: pointer;
             box-shadow: 0 25px 35px -12px rgba(0, 0, 0, 0.3);
-            transition: transform 0.08s linear, background-color 0.2s ease;
+            transition: transform 0.08s linear, background-color 0.3s ease;
             text-align: center;
             width: 100%;
             max-width: 480px;
@@ -286,11 +298,6 @@
                 opacity: 0;
                 transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% - 90px)) scale(1.2);
             }
-        }
-
-        @keyframes gentlePop {
-            0% { transform: scale(0.96); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
@@ -525,7 +532,36 @@
         }
     }
     
-    let clicksSinceLastColor = 0;
+    let rainbowInterval = null;
+    let shakeCheckInterval = null;
+    
+    function startRainbowTimer() {
+        if (rainbowInterval) clearInterval(rainbowInterval);
+        rainbowInterval = setInterval(() => {
+            const newColor = getRandomRainbowColor();
+            mainBtn.style.backgroundColor = newColor;
+            showFloatingMessage("🌈 РАДУГА! 🌈", "#ff4d6d");
+        }, 30000);
+    }
+    
+    function checkAndShake() {
+        const clickCount = Math.floor(totalClicks);
+        if (clickCount === 67 || clickCount === 167 || clickCount === 267 || clickCount === 367 || clickCount === 467 || clickCount === 567 || clickCount === 667 || clickCount === 767 || clickCount === 867 || clickCount === 967 || clickCount === 1067 || clickCount === 1167) {
+            document.body.classList.add('shake-effect');
+            setTimeout(() => {
+                document.body.classList.remove('shake-effect');
+            }, 400);
+        }
+    }
+    
+    let lastShakeValue = Math.floor(totalClicks);
+    function monitorShake() {
+        const current = Math.floor(totalClicks);
+        if (current !== lastShakeValue) {
+            checkAndShake();
+            lastShakeValue = current;
+        }
+    }
     
     function onMainTap(event) {
         let clientX, clientY;
@@ -541,15 +577,7 @@
         
         const gained = addClicks(1, false);
         createHeartExplosion(clientX, clientY);
-        
-        clicksSinceLastColor += gained;
-        
-        if (clicksSinceLastColor >= 100) {
-            const newColor = getRandomRainbowColor();
-            mainBtn.style.backgroundColor = newColor;
-            clicksSinceLastColor = clicksSinceLastColor - 100;
-            showFloatingMessage("🌈 РАДУГА! 🌈", "#ff4d6d");
-        }
+        monitorShake();
         
         if (window.navigator && window.navigator.vibrate) {
             window.navigator.vibrate(30);
@@ -584,6 +612,7 @@
                 updateUI();
                 updateCPSDisplay();
                 saveGame();
+                monitorShake();
             }
         }, 1000);
     }
@@ -593,10 +622,12 @@
         updateUI();
         updateCPSDisplay();
         startPassiveIncome();
+        startRainbowTimer();
         
-        clicksSinceLastColor = 0;
         mainBtn.style.backgroundColor = '#ff4d6d';
         lastColorIndex = -1;
+        lastShakeValue = Math.floor(totalClicks);
+        checkAndShake();
         
         buyClickBtn.onclick = (e) => {
             e.stopPropagation();
@@ -617,6 +648,7 @@
         
         setInterval(() => {
             updateCPSDisplay();
+            monitorShake();
         }, 300);
     }
     
