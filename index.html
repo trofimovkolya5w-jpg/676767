@@ -20,7 +20,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 16px;
+            padding: 20px;
             touch-action: pan-y pinch-zoom;
             transition: transform 0.1s cubic-bezier(0.2, 1.2, 0.8, 1);
         }
@@ -44,9 +44,10 @@
             flex-wrap: wrap;
             gap: 30px;
             justify-content: center;
-            align-items: center;
+            align-items: stretch;
         }
 
+        /* Левая панель - улучшения */
         .upgrades-panel {
             flex: 1;
             min-width: 260px;
@@ -77,6 +78,10 @@
             margin-bottom: 20px;
             border: 1px solid #ffcdd6;
             transition: transform 0.2s ease;
+        }
+
+        .upgrade-card:hover {
+            transform: translateY(-3px);
         }
 
         .upgrade-name {
@@ -116,6 +121,11 @@
             border-radius: 40px;
         }
 
+        .upgrade-level {
+            font-weight: 700;
+            color: #2b2d42;
+        }
+
         .buy-btn {
             width: 100%;
             background: #ff4d6d;
@@ -143,9 +153,10 @@
             transform: none;
         }
 
-        .center-love {
-            flex: 2;
-            min-width: 300px;
+        /* Центральная панель - кликер */
+        .center-panel {
+            flex: 1.5;
+            min-width: 320px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -156,9 +167,8 @@
         .stats {
             background: #fef5f7;
             border-radius: 60px;
-            padding: 20px 30px;
+            padding: 24px 30px;
             width: 100%;
-            max-width: 500px;
             text-align: center;
             border: 1px solid #ffe0e5;
         }
@@ -210,17 +220,16 @@
             background-color: #ff4d6d;
             border: none;
             border-radius: 100px;
-            padding: 1.4rem 1.8rem;
-            font-size: 3rem;
+            padding: 1.6rem 2rem;
+            font-size: 3.2rem;
             font-weight: 800;
             font-family: inherit;
             color: white;
             cursor: pointer;
-            box-shadow: 0 25px 35px -12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 30px 40px -12px rgba(0, 0, 0, 0.3);
             transition: transform 0.08s linear, background-color 0.3s ease;
             text-align: center;
             width: 100%;
-            max-width: 480px;
             letter-spacing: 0.02em;
             white-space: nowrap;
             touch-action: manipulation;
@@ -230,15 +239,70 @@
             transform: scale(0.96);
         }
 
-        @media (max-width: 650px) {
+        /* Правая панель - замок (скоро обновление) */
+        .coming-soon-panel {
+            flex: 1;
+            min-width: 260px;
+            background: linear-gradient(145deg, #f5f3ff 0%, #edeaff 100%);
+            border-radius: 40px;
+            padding: 24px 20px;
+            border: 2px dashed #c4b5fd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 20px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
+        }
+
+        .lock-icon {
+            font-size: 5rem;
+            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.1));
+            animation: gentleFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .soon-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .soon-text {
+            font-size: 1rem;
+            color: #6b7280;
+            line-height: 1.5;
+            background: rgba(139, 92, 246, 0.1);
+            padding: 12px 16px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+        }
+
+        .sparkles {
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 900px) {
             .game-container {
-                gap: 20px;
+                flex-direction: column;
+            }
+            .upgrades-panel, .center-panel, .coming-soon-panel {
+                width: 100%;
             }
             .love-button {
                 font-size: 2.4rem;
-                padding: 1rem 1rem;
+                padding: 1rem 1.5rem;
                 white-space: nowrap;
-                max-width: 400px;
             }
             .clicks-count {
                 font-size: 2.8rem;
@@ -254,15 +318,8 @@
                 font-size: 1.4rem;
                 padding: 5px 18px;
             }
-            .upgrades-panel {
-                min-width: 240px;
-                padding: 18px 16px;
-            }
-            .upgrade-name {
-                font-size: 1.3rem;
-            }
-            .stats {
-                padding: 16px 20px;
+            .upgrades-panel, .coming-soon-panel {
+                min-width: auto;
             }
         }
 
@@ -277,6 +334,12 @@
             }
             .clicks-count span:first-child {
                 font-size: 2.2rem;
+            }
+            .soon-title {
+                font-size: 1.5rem;
+            }
+            .lock-icon {
+                font-size: 3.5rem;
             }
         }
 
@@ -303,6 +366,7 @@
 </head>
 <body>
 <div class="game-container">
+    <!-- Левая панель: Улучшения -->
     <div class="upgrades-panel">
         <div class="upgrades-title">
             <span>✨</span> Улучшения <span>💖</span>
@@ -335,11 +399,12 @@
             <button class="buy-btn" id="buyCpsUpgradeBtn">Купить</button>
         </div>
         <div style="margin-top: 8px; font-size: 0.75rem; text-align: center; color:#b98f99;">
-            💡 Цена удваивается после каждой покупки на каждый 67 кое-что происходит
+            💡 Цена удваивается после каждой покупки
         </div>
     </div>
 
-    <div class="center-love">
+    <!-- Центральная панель: Кликер -->
+    <div class="center-panel">
         <div class="stats">
             <div class="clicks-count">
                 <span id="totalClicks">0</span>
@@ -351,6 +416,17 @@
             </div>
         </div>
         <button class="love-button" id="mainLoveBtn">Клик</button>
+    </div>
+
+    <!-- Правая панель: Замок (скоро обновление) -->
+    <div class="coming-soon-panel">
+        <div class="lock-icon">🔒</div>
+        <div class="soon-title">Скоро</div>
+        <div class="soon-text">
+            ✨ Обновление готовится ✨<br>
+            Тут появятся новые возможности...
+        </div>
+        <div class="sparkles">⭐️⭐️⭐️</div>
     </div>
 </div>
 
@@ -533,7 +609,6 @@
     }
     
     let rainbowInterval = null;
-    let shakeCheckInterval = null;
     
     function startRainbowTimer() {
         if (rainbowInterval) clearInterval(rainbowInterval);
@@ -546,7 +621,7 @@
     
     function checkAndShake() {
         const clickCount = Math.floor(totalClicks);
-        if (clickCount === 67 || clickCount === 167 || clickCount === 267 || clickCount === 367 || clickCount === 467 || clickCount === 567 || clickCount === 667 || clickCount === 767 || clickCount === 867 || clickCount === 967 || clickCount === 1067 || clickCount === 1167) {
+        if (clickCount === 67 || clickCount === 167 || clickCount === 267 || clickCount === 367 || clickCount === 467 || clickCount === 567 || clickCount === 667 || clickCount === 767 || clickCount === 867 || clickCount === 967 || clickCount === 1067 || clickCount === 1167 || clickCount === 1267 || clickCount === 1367) {
             document.body.classList.add('shake-effect');
             setTimeout(() => {
                 document.body.classList.remove('shake-effect');
