@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Кликер</title>
+    <title>Кликер | Тряска + Улучшения</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,7 @@
         }
 
         body {
-            background-color: #ffffff;
+            background: linear-gradient(135deg, #fff9f0 0%, #ffe6d5 100%);
             font-family: 'Segoe UI', system-ui, 'Roboto', 'Helvetica Neue', sans-serif;
             min-height: 100vh;
             display: flex;
@@ -39,35 +39,67 @@
         .game-container {
             max-width: 1400px;
             width: 100%;
-            background: white;
+            background: rgba(255, 248, 240, 0.7);
+            backdrop-filter: blur(2px);
+            border-radius: 60px;
             display: flex;
             flex-wrap: wrap;
             gap: 30px;
             justify-content: center;
             align-items: stretch;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
         }
 
         .upgrades-panel {
             flex: 1;
             min-width: 260px;
-            background: #fef9f9;
+            background: #fffef7;
             border-radius: 40px;
             padding: 24px 20px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
-            border: 1px solid #ffe2e7;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ffe0c4;
             touch-action: manipulation;
+            position: relative;
+        }
+
+        .upgrades-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
         }
 
         .upgrades-title {
             font-size: 1.8rem;
             font-weight: 800;
-            color: #ff4d6d;
-            text-align: center;
-            margin-bottom: 28px;
+            color: #e87c5e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-btn {
+            background: #e87c5e;
+            border: none;
+            border-radius: 50px;
+            width: 44px;
+            height: 44px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 10px rgba(232, 124, 94, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            font-family: inherit;
+        }
+
+        .settings-btn:active {
+            transform: scale(0.95);
+            background: #d46242;
         }
 
         .upgrade-card {
@@ -75,7 +107,7 @@
             border-radius: 32px;
             padding: 18px 20px;
             margin-bottom: 20px;
-            border: 1px solid #ffcdd6;
+            border: 1px solid #ffd9b5;
             transition: transform 0.2s ease;
         }
 
@@ -86,7 +118,7 @@
         .upgrade-name {
             font-size: 1.5rem;
             font-weight: 800;
-            color: #e63946;
+            color: #e87c5e;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -95,10 +127,10 @@
 
         .upgrade-desc {
             font-size: 0.9rem;
-            color: #6c5b5f;
+            color: #9b7b6b;
             margin-bottom: 16px;
             padding-left: 12px;
-            border-left: 3px solid #ffb3c1;
+            border-left: 3px solid #ffc8a2;
         }
 
         .upgrade-stats {
@@ -107,14 +139,14 @@
             align-items: baseline;
             font-size: 0.95rem;
             margin-bottom: 16px;
-            background: #fff0f2;
+            background: #fff4ea;
             padding: 8px 14px;
             border-radius: 60px;
         }
 
         .upgrade-price {
             font-weight: 800;
-            color: #d90429;
+            color: #e87c5e;
             background: white;
             padding: 4px 12px;
             border-radius: 40px;
@@ -122,12 +154,12 @@
 
         .upgrade-level {
             font-weight: 700;
-            color: #2b2d42;
+            color: #5a4a42;
         }
 
         .buy-btn {
             width: 100%;
-            background: #ff4d6d;
+            background: #e87c5e;
             border: none;
             border-radius: 60px;
             padding: 12px 0;
@@ -136,17 +168,17 @@
             color: white;
             cursor: pointer;
             transition: all 0.1s ease;
-            box-shadow: 0 4px 10px rgba(255, 77, 109, 0.2);
+            box-shadow: 0 4px 10px rgba(232, 124, 94, 0.2);
             touch-action: manipulation;
         }
 
         .buy-btn:active {
             transform: scale(0.96);
-            background: #e6003a;
+            background: #d46242;
         }
 
         .buy-btn.disabled {
-            background: #d4a5b0;
+            background: #d4b5a8;
             cursor: not-allowed;
             opacity: 0.6;
             transform: none;
@@ -163,18 +195,19 @@
         }
 
         .stats {
-            background: #fef5f7;
+            background: #fffef7;
             border-radius: 60px;
             padding: 24px 30px;
             width: 100%;
             text-align: center;
-            border: 1px solid #ffe0e5;
+            border: 1px solid #ffe0c4;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
         }
 
         .clicks-count {
             font-size: 4rem;
             font-weight: 900;
-            color: #1e1e2f;
+            color: #4a3b33;
             line-height: 1.2;
             margin-bottom: 12px;
             display: flex;
@@ -191,8 +224,8 @@
         .clicks-label {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #ff4d6d;
-            background: #fff0f2;
+            color: #e87c5e;
+            background: #fff4ea;
             padding: 2px 16px;
             border-radius: 60px;
         }
@@ -200,22 +233,23 @@
         .cps-count {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #4a4e69;
+            color: #8b6b5b;
             background: white;
             display: inline-block;
             padding: 8px 24px;
             border-radius: 80px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
 
         .cps-label {
             font-size: 1rem;
             font-weight: 600;
-            color: #e63946;
+            color: #e87c5e;
             margin-right: 8px;
         }
 
         .love-button {
-            background-color: #ff4d6d;
+            background-color: #e87c5e;
             border: none;
             border-radius: 100px;
             padding: 1.6rem 2rem;
@@ -224,8 +258,8 @@
             font-family: inherit;
             color: white;
             cursor: pointer;
-            box-shadow: 0 30px 40px -12px rgba(0, 0, 0, 0.3);
-            transition: transform 0.08s linear, background-color 0.3s ease;
+            box-shadow: 0 30px 40px -12px rgba(0, 0, 0, 0.25);
+            transition: transform 0.08s linear;
             text-align: center;
             width: 100%;
             letter-spacing: 0.02em;
@@ -240,10 +274,10 @@
         .coming-soon-panel {
             flex: 1;
             min-width: 260px;
-            background: linear-gradient(145deg, #f5f3ff 0%, #edeaff 100%);
+            background: linear-gradient(145deg, #f3eaff 0%, #e8d9ff 100%);
             border-radius: 40px;
             padding: 24px 20px;
-            border: 2px dashed #c4b5fd;
+            border: 2px dashed #b87cf5;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -255,7 +289,7 @@
 
         .lock-icon {
             font-size: 5rem;
-            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.1));
+            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.08));
             animation: gentleFloat 2s ease-in-out infinite;
         }
 
@@ -267,7 +301,7 @@
         .soon-title {
             font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #8b5cf6, #c084fc);
+            background: linear-gradient(135deg, #9b6bf5, #c084fc);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -275,9 +309,9 @@
 
         .soon-text {
             font-size: 1rem;
-            color: #6b7280;
+            color: #7c5ca3;
             line-height: 1.5;
-            background: rgba(139, 92, 246, 0.1);
+            background: rgba(155, 107, 245, 0.1);
             padding: 12px 16px;
             border-radius: 60px;
             backdrop-filter: blur(4px);
@@ -289,9 +323,70 @@
             opacity: 0.7;
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #fffef7;
+            border-radius: 48px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border: 1px solid #ffe0c4;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #e87c5e;
+            background: none;
+            border: none;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+
+        .close-modal:active {
+            transform: scale(0.9);
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #e87c5e;
+            margin-bottom: 20px;
+        }
+
+        .modal-placeholder {
+            font-size: 1rem;
+            color: #9b7b6b;
+            padding: 20px;
+            background: #fff4ea;
+            border-radius: 32px;
+            margin-top: 10px;
+        }
+
         @media (max-width: 900px) {
             .game-container {
                 flex-direction: column;
+                background: rgba(255, 248, 240, 0.9);
+                padding: 16px;
             }
             .upgrades-panel, .center-panel, .coming-soon-panel {
                 width: 100%;
@@ -338,6 +433,14 @@
             .lock-icon {
                 font-size: 3.5rem;
             }
+            .upgrades-title {
+                font-size: 1.5rem;
+            }
+            .settings-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 1.3rem;
+            }
         }
 
         .heart-float {
@@ -345,7 +448,7 @@
             pointer-events: none;
             font-size: 1.8rem;
             z-index: 9999;
-            filter: drop-shadow(0 0 3px #ff4d6d);
+            filter: drop-shadow(0 0 3px #ffaa88);
             animation: floatUpFade 0.8s ease-out forwards;
         }
 
@@ -364,8 +467,11 @@
 <body>
 <div class="game-container">
     <div class="upgrades-panel">
-        <div class="upgrades-title">
-            <span>✨</span> Улучшения <span>💖</span>
+        <div class="upgrades-header">
+            <div class="upgrades-title">
+                <span>✨</span> Улучшения <span>💖</span>
+            </div>
+            <button class="settings-btn" id="settingsBtn">⚙️</button>
         </div>
         <div class="upgrade-card">
             <div class="upgrade-name">
@@ -394,7 +500,7 @@
             </div>
             <button class="buy-btn" id="buyCpsUpgradeBtn">Купить</button>
         </div>
-        <div style="margin-top: 8px; font-size: 0.75rem; text-align: center; color:#b98f99;">
+        <div style="margin-top: 8px; font-size: 0.75rem; text-align: center; color:#c09b87;">
             💡 Цена удваивается после каждой покупки
         </div>
     </div>
@@ -424,6 +530,16 @@
     </div>
 </div>
 
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <button class="close-modal" id="closeModalBtn">✖</button>
+        <div class="modal-title">⚙️ Настройки</div>
+        <div class="modal-placeholder">
+            🎮 Здесь скоро появятся новые опции...
+        </div>
+    </div>
+</div>
+
 <script>
     let totalClicks = 0;
     let clickBonus = 0;
@@ -437,6 +553,7 @@
     let musicBuffer = null;
     let isMusicPlaying = false;
     let musicSource = null;
+    let musicGainNode = null;
     
     const totalSpan = document.getElementById('totalClicks');
     const cpsSpan = document.getElementById('clicksPerSec');
@@ -447,9 +564,9 @@
     const buyClickBtn = document.getElementById('buyClickUpgradeBtn');
     const buyCpsBtn = document.getElementById('buyCpsUpgradeBtn');
     const mainBtn = document.getElementById('mainLoveBtn');
-    
-    const rainbowColors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
-    let lastColorIndex = -1;
+    const settingsBtn = document.getElementById('settingsBtn');
+    const settingsModal = document.getElementById('settingsModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
     
     function initAudio() {
         if (!audioContext) {
@@ -498,7 +615,7 @@
     }
     
     function playBackgroundMusic() {
-        if (!audioContext || !musicBuffer) return;
+        if (!audioContext || !musicBuffer || isMusicPlaying) return;
         if (musicSource) {
             try {
                 musicSource.stop();
@@ -507,10 +624,10 @@
         musicSource = audioContext.createBufferSource();
         musicSource.buffer = musicBuffer;
         musicSource.loop = true;
-        const gainNode = audioContext.createGain();
-        gainNode.gain.value = 0.28;
-        musicSource.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+        musicGainNode = audioContext.createGain();
+        musicGainNode.gain.value = 0.28;
+        musicSource.connect(musicGainNode);
+        musicGainNode.connect(audioContext.destination);
         musicSource.start();
         isMusicPlaying = true;
     }
@@ -563,15 +680,6 @@
         });
         
         gainNode.gain.exponentialRampToValueAtTime(0.00001, now + 0.5);
-    }
-    
-    function getRandomRainbowColor() {
-        let newIndex;
-        do {
-            newIndex = Math.floor(Math.random() * rainbowColors.length);
-        } while (newIndex === lastColorIndex && rainbowColors.length > 1);
-        lastColorIndex = newIndex;
-        return rainbowColors[newIndex];
     }
     
     function updateCPSDisplay() {
@@ -661,9 +769,9 @@
             updateUI();
             saveGame();
             playPurchaseSound();
-            showFloatingMessage("✨ +1 к силе клика ✨", "#e63946");
+            showFloatingMessage("✨ +1 к силе клика ✨", "#e87c5e");
         } else {
-            showFloatingMessage("💔 Не хватает кликов 💔", "#b0003a");
+            showFloatingMessage("💔 Не хватает кликов 💔", "#d46242");
         }
     }
     
@@ -676,9 +784,9 @@
             updateUI();
             saveGame();
             playPurchaseSound();
-            showFloatingMessage("💓 +1 клик/сек 💓", "#2a9d8f");
+            showFloatingMessage("💓 +1 клик/сек 💓", "#e87c5e");
         } else {
-            showFloatingMessage("💔 Не хватает кликов 💔", "#b0003a");
+            showFloatingMessage("💔 Не хватает кликов 💔", "#d46242");
         }
     }
     
@@ -723,17 +831,6 @@
         }
     }
     
-    let rainbowInterval = null;
-    
-    function startRainbowTimer() {
-        if (rainbowInterval) clearInterval(rainbowInterval);
-        rainbowInterval = setInterval(() => {
-            const newColor = getRandomRainbowColor();
-            mainBtn.style.backgroundColor = newColor;
-            showFloatingMessage("🌈 РАДУГА! 🌈", "#ff4d6d");
-        }, 30000);
-    }
-    
     function checkAndShake() {
         const clickCount = Math.floor(totalClicks);
         if (clickCount === 67 || clickCount === 167 || clickCount === 267 || clickCount === 367 || clickCount === 467 || clickCount === 567 || clickCount === 667 || clickCount === 767 || clickCount === 867 || clickCount === 967 || clickCount === 1067 || clickCount === 1167 || clickCount === 1267 || clickCount === 1367) {
@@ -765,11 +862,6 @@
             clientY = event.clientY;
         }
         
-        initAudio();
-        if (!isMusicPlaying && audioContext && audioContext.state === 'running') {
-            playBackgroundMusic();
-        }
-        
         const gained = addClicks(1, false);
         createHeartExplosion(clientX, clientY);
         monitorShake();
@@ -785,7 +877,7 @@
         plus.style.top = `${clientY - 35}px`;
         plus.style.fontSize = '1.7rem';
         plus.style.fontWeight = 'bold';
-        plus.style.color = '#ff4d6d';
+        plus.style.color = '#e87c5e';
         plus.style.textShadow = '0 0 5px white';
         plus.style.pointerEvents = 'none';
         plus.style.zIndex = '9998';
@@ -812,15 +904,21 @@
         }, 1000);
     }
     
+    async function startMusicAutomatically() {
+        initAudio();
+        if (audioContext) {
+            await audioContext.resume();
+            playBackgroundMusic();
+        }
+    }
+    
     function initGame() {
         loadGame();
         updateUI();
         updateCPSDisplay();
         startPassiveIncome();
-        startRainbowTimer();
         
-        mainBtn.style.backgroundColor = '#ff4d6d';
-        lastColorIndex = -1;
+        mainBtn.style.backgroundColor = '#e87c5e';
         lastShakeValue = Math.floor(totalClicks);
         checkAndShake();
         
@@ -831,6 +929,21 @@
         buyCpsBtn.onclick = (e) => {
             e.stopPropagation();
             buyCpsUpgrade();
+        };
+        
+        settingsBtn.onclick = (e) => {
+            e.stopPropagation();
+            settingsModal.style.display = 'flex';
+        };
+        
+        closeModalBtn.onclick = () => {
+            settingsModal.style.display = 'none';
+        };
+        
+        window.onclick = (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.style.display = 'none';
+            }
         };
         
         mainBtn.onclick = (e) => {
@@ -845,6 +958,8 @@
             updateCPSDisplay();
             monitorShake();
         }, 300);
+        
+        startMusicAutomatically();
     }
     
     initGame();
