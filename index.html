@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Кликер | Радуга + Тряска</title>
+    <title>Кликер</title>
     <style>
         * {
             margin: 0;
@@ -47,7 +47,6 @@
             align-items: stretch;
         }
 
-        /* Левая панель - улучшения */
         .upgrades-panel {
             flex: 1;
             min-width: 260px;
@@ -153,7 +152,6 @@
             transform: none;
         }
 
-        /* Центральная панель - кликер */
         .center-panel {
             flex: 1.5;
             min-width: 320px;
@@ -239,7 +237,6 @@
             transform: scale(0.96);
         }
 
-        /* Правая панель - замок (скоро обновление) */
         .coming-soon-panel {
             flex: 1;
             min-width: 260px;
@@ -366,7 +363,6 @@
 </head>
 <body>
 <div class="game-container">
-    <!-- Левая панель: Улучшения -->
     <div class="upgrades-panel">
         <div class="upgrades-title">
             <span>✨</span> Улучшения <span>💖</span>
@@ -403,7 +399,6 @@
         </div>
     </div>
 
-    <!-- Центральная панель: Кликер -->
     <div class="center-panel">
         <div class="stats">
             <div class="clicks-count">
@@ -418,7 +413,6 @@
         <button class="love-button" id="mainLoveBtn">Клик</button>
     </div>
 
-    <!-- Правая панель: Замок (скоро обновление) -->
     <div class="coming-soon-panel">
         <div class="lock-icon">🔒</div>
         <div class="soon-title">Скоро</div>
@@ -439,6 +433,10 @@
     let currentClickPrice = 200;
     let currentCpsPrice = 200;
     let clickTimestamps = [];
+    let audioContext = null;
+    let musicBuffer = null;
+    let isMusicPlaying = false;
+    let musicSource = null;
     
     const totalSpan = document.getElementById('totalClicks');
     const cpsSpan = document.getElementById('clicksPerSec');
@@ -452,6 +450,120 @@
     
     const rainbowColors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
     let lastColorIndex = -1;
+    
+    function initAudio() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            createBackgroundMusic();
+        }
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+    }
+    
+    function createBackgroundMusic() {
+        const sampleRate = audioContext.sampleRate;
+        const duration = 12;
+        const length = sampleRate * duration;
+        const buffer = audioContext.createBuffer(2, length, sampleRate);
+        
+        for (let ch = 0; ch < 2; ch++) {
+            const data = buffer.getChannelData(ch);
+            for (let i = 0; i < length; i++) {
+                const t = i / sampleRate;
+                let value = 0;
+                const chords = [
+                    { notes: [261.63, 329.63, 392.00], start: 0, length: 4 },
+                    { notes: [293.66, 349.23, 440.00], start: 4, length: 4 },
+                    { notes: [329.63, 392.00, 493.88], start: 8, length: 4 }
+                ];
+                
+                for (const chord of chords) {
+                    if (t >= chord.start && t < chord.start + chord.length) {
+                        for (const freq of chord.notes) {
+                            value += Math.sin(2 * Math.PI * freq * t) * 0.12;
+                        }
+                    }
+                }
+                const melody = Math.sin(2 * Math.PI * 523.25 * t) * 0.08 * Math.sin(2 * Math.PI * 1.5 * t);
+                value += melody;
+                const bass = Math.sin(2 * Math.PI * 130.81 * t) * 0.1 * (Math.sin(2 * Math.PI * 1 * t) * 0.5 + 0.5);
+                value += bass;
+                const envelope = Math.exp(-t * 0.3) * 0.8 + 0.2;
+                const lfo = Math.sin(2 * Math.PI * 0.4 * t) * 0.04;
+                data[i] = (value + lfo) * envelope * 0.5;
+            }
+        }
+        musicBuffer = buffer;
+    }
+    
+    function playBackgroundMusic() {
+        if (!audioContext || !musicBuffer) return;
+        if (musicSource) {
+            try {
+                musicSource.stop();
+            } catch(e) {}
+        }
+        musicSource = audioContext.createBufferSource();
+        musicSource.buffer = musicBuffer;
+        musicSource.loop = true;
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.28;
+        musicSource.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        musicSource.start();
+        isMusicPlaying = true;
+    }
+    
+    function playClickSound() {
+        if (!audioContext) {
+            initAudio();
+        }
+        if (!audioContext) return;
+        const now = audioContext.currentTime;
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.1;
+        gainNode.connect(audioContext.destination);
+        
+        const osc = audioContext.createOscillator();
+        osc.frequency.value = 880;
+        osc.type = 'triangle';
+        osc.connect(gainNode);
+        osc.start();
+        
+        const osc2 = audioContext.createOscillator();
+        osc2.frequency.value = 440;
+        osc2.type = 'sine';
+        osc2.connect(gainNode);
+        osc2.start(now + 0.02);
+        
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, now + 0.12);
+        osc.stop(now + 0.1);
+        osc2.stop(now + 0.12);
+    }
+    
+    function playPurchaseSound() {
+        if (!audioContext) {
+            initAudio();
+        }
+        if (!audioContext) return;
+        const now = audioContext.currentTime;
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.18;
+        gainNode.connect(audioContext.destination);
+        
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, index) => {
+            const osc = audioContext.createOscillator();
+            osc.frequency.value = freq;
+            osc.type = 'sine';
+            osc.connect(gainNode);
+            osc.start(now + index * 0.08);
+            osc.stop(now + index * 0.08 + 0.2);
+        });
+        
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, now + 0.5);
+    }
     
     function getRandomRainbowColor() {
         let newIndex;
@@ -503,6 +615,7 @@
         if (!fromPassive) {
             clickTimestamps.push(Date.now());
             updateCPSDisplay();
+            playClickSound();
         }
         let gained = baseAmount;
         if (!fromPassive) {
@@ -547,6 +660,7 @@
             currentClickPrice *= 2;
             updateUI();
             saveGame();
+            playPurchaseSound();
             showFloatingMessage("✨ +1 к силе клика ✨", "#e63946");
         } else {
             showFloatingMessage("💔 Не хватает кликов 💔", "#b0003a");
@@ -561,6 +675,7 @@
             currentCpsPrice *= 2;
             updateUI();
             saveGame();
+            playPurchaseSound();
             showFloatingMessage("💓 +1 клик/сек 💓", "#2a9d8f");
         } else {
             showFloatingMessage("💔 Не хватает кликов 💔", "#b0003a");
@@ -648,6 +763,11 @@
         } else {
             clientX = event.clientX;
             clientY = event.clientY;
+        }
+        
+        initAudio();
+        if (!isMusicPlaying && audioContext && audioContext.state === 'running') {
+            playBackgroundMusic();
         }
         
         const gained = addClicks(1, false);
