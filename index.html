@@ -22,18 +22,6 @@
             justify-content: center;
             padding: 20px;
             touch-action: pan-y pinch-zoom;
-            transition: transform 0.1s cubic-bezier(0.2, 1.2, 0.8, 1);
-        }
-
-        body.shake-effect {
-            animation: screenShake 0.15s cubic-bezier(0.25, 1.5, 0.5, 1) 2;
-        }
-
-        @keyframes screenShake {
-            0% { transform: translateX(0px) rotate(0deg); }
-            25% { transform: translateX(12px) rotate(1deg); }
-            75% { transform: translateX(-10px) rotate(-1deg); }
-            100% { transform: translateX(0px) rotate(0deg); }
         }
 
         .game-container {
@@ -46,7 +34,7 @@
             flex-wrap: wrap;
             gap: 30px;
             justify-content: center;
-            align-items: stretch;
+            align-items: flex-start;
             padding: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
         }
@@ -60,7 +48,7 @@
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
             border: 1px solid #ffe0c4;
             touch-action: manipulation;
-            position: relative;
+            align-self: stretch;
         }
 
         .upgrades-header {
@@ -190,14 +178,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 28px;
+            justify-content: flex-start;
+            gap: 30px;
+            padding-top: 20px;
         }
 
         .stats {
             background: #fffef7;
             border-radius: 60px;
-            padding: 24px 30px;
+            padding: 20px 30px;
             width: 100%;
             text-align: center;
             border: 1px solid #ffe0c4;
@@ -205,11 +194,11 @@
         }
 
         .clicks-count {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 900;
             color: #4a3b33;
             line-height: 1.2;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: baseline;
             justify-content: center;
@@ -218,109 +207,86 @@
         }
 
         .clicks-count span:first-child {
-            font-size: 4rem;
+            font-size: 3.5rem;
         }
 
         .clicks-label {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: #e87c5e;
             background: #fff4ea;
-            padding: 2px 16px;
+            padding: 2px 14px;
             border-radius: 60px;
         }
 
         .cps-count {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
             color: #8b6b5b;
             background: white;
             display: inline-block;
-            padding: 8px 24px;
+            padding: 6px 20px;
             border-radius: 80px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
 
         .cps-label {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #e87c5e;
             margin-right: 8px;
         }
 
-        .love-button {
-            background-color: #e87c5e;
-            border: none;
-            border-radius: 100px;
-            padding: 1.6rem 2rem;
-            font-size: 3.2rem;
-            font-weight: 800;
-            font-family: inherit;
-            color: white;
+        .click-circle {
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle at 30% 30%, #6fcf97, #27ae60);
+            border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 30px 40px -12px rgba(0, 0, 0, 0.25);
-            transition: transform 0.08s linear;
-            text-align: center;
-            width: 100%;
-            letter-spacing: 0.02em;
-            white-space: nowrap;
+            box-shadow: 0 25px 35px rgba(39, 174, 96, 0.3), inset 0 -8px 0 rgba(0,0,0,0.1);
+            transition: transform 0.08s linear, box-shadow 0.1s;
             touch-action: manipulation;
         }
 
-        .love-button:active {
+        .click-circle:active {
             transform: scale(0.96);
+            box-shadow: 0 15px 25px rgba(39, 174, 96, 0.3), inset 0 -4px 0 rgba(0,0,0,0.1);
         }
 
-        .coming-soon-panel {
+        .right-panel {
             flex: 1;
             min-width: 260px;
-            background: linear-gradient(145deg, #f3eaff 0%, #e8d9ff 100%);
+            background: #fffef7;
             border-radius: 40px;
             padding: 24px 20px;
-            border: 2px dashed #b87cf5;
+            border: 1px solid #ffe0c4;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            text-align: center;
-            gap: 20px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            align-self: stretch;
         }
 
-        .lock-icon {
-            font-size: 5rem;
-            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.08));
-            animation: gentleFloat 2s ease-in-out infinite;
-        }
-
-        @keyframes gentleFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .soon-title {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #9b6bf5, #c084fc);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .soon-text {
-            font-size: 1rem;
-            color: #7c5ca3;
-            line-height: 1.5;
-            background: rgba(155, 107, 245, 0.1);
-            padding: 12px 16px;
+        .action-btn {
+            width: 100%;
+            background: #e87c5e;
+            border: none;
             border-radius: 60px;
-            backdrop-filter: blur(4px);
+            padding: 20px 0;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: white;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 6px 15px rgba(232, 124, 94, 0.25);
+            text-align: center;
         }
 
-        .sparkles {
-            font-size: 1.5rem;
-            letter-spacing: 8px;
-            opacity: 0.7;
+        .action-btn:active {
+            transform: scale(0.96);
+            background: #d46242;
         }
 
         .modal {
@@ -373,65 +339,101 @@
             margin-bottom: 20px;
         }
 
-        .modal-placeholder {
-            font-size: 1rem;
-            color: #9b7b6b;
-            padding: 20px;
-            background: #fff4ea;
-            border-radius: 32px;
-            margin-top: 10px;
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #ffe0c4;
+        }
+
+        .settings-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #5a4a42;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #d4b5a8;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch.active {
+            background: #e87c5e;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
         }
 
         @media (max-width: 900px) {
             .game-container {
                 flex-direction: column;
-                background: rgba(255, 248, 240, 0.9);
+                align-items: stretch;
                 padding: 16px;
             }
-            .upgrades-panel, .center-panel, .coming-soon-panel {
-                width: 100%;
+            .center-panel {
+                order: 1;
             }
-            .love-button {
-                font-size: 2.4rem;
-                padding: 1rem 1.5rem;
-                white-space: nowrap;
+            .upgrades-panel {
+                order: 2;
+            }
+            .right-panel {
+                order: 3;
+            }
+            .click-circle {
+                width: 200px;
+                height: 200px;
             }
             .clicks-count {
-                font-size: 2.8rem;
+                font-size: 2.5rem;
             }
             .clicks-count span:first-child {
-                font-size: 2.8rem;
+                font-size: 2.5rem;
             }
             .clicks-label {
-                font-size: 1.1rem;
-                padding: 2px 12px;
+                font-size: 1rem;
+                padding: 2px 10px;
             }
             .cps-count {
-                font-size: 1.4rem;
-                padding: 5px 18px;
+                font-size: 1.2rem;
+                padding: 4px 16px;
             }
-            .upgrades-panel, .coming-soon-panel {
-                min-width: auto;
+            .action-btn {
+                padding: 16px 0;
+                font-size: 1.4rem;
             }
         }
 
         @media (max-width: 480px) {
-            .love-button {
-                font-size: 2rem;
-                padding: 0.9rem 1rem;
-                white-space: nowrap;
+            .click-circle {
+                width: 160px;
+                height: 160px;
             }
             .clicks-count {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             .clicks-count span:first-child {
-                font-size: 2.2rem;
-            }
-            .soon-title {
-                font-size: 1.5rem;
-            }
-            .lock-icon {
-                font-size: 3.5rem;
+                font-size: 2rem;
             }
             .upgrades-title {
                 font-size: 1.5rem;
@@ -440,6 +442,10 @@
                 width: 38px;
                 height: 38px;
                 font-size: 1.3rem;
+            }
+            .action-btn {
+                padding: 14px 0;
+                font-size: 1.2rem;
             }
         }
 
@@ -516,17 +522,12 @@
                 <span id="clicksPerSec">0</span>
             </div>
         </div>
-        <button class="love-button" id="mainLoveBtn">Клик</button>
+        <div class="click-circle" id="mainClicker"></div>
     </div>
 
-    <div class="coming-soon-panel">
-        <div class="lock-icon">🔒</div>
-        <div class="soon-title">Скоро</div>
-        <div class="soon-text">
-            ✨ Обновление готовится ✨<br>
-            Тут появятся новые возможности...
-        </div>
-        <div class="sparkles">⭐️⭐️⭐️</div>
+    <div class="right-panel">
+        <button class="action-btn" id="inventoryBtn">📦 Инвентарь</button>
+        <button class="action-btn" id="casesBtn">🎁 Кейсы</button>
     </div>
 </div>
 
@@ -534,8 +535,21 @@
     <div class="modal-content">
         <button class="close-modal" id="closeModalBtn">✖</button>
         <div class="modal-title">⚙️ Настройки</div>
-        <div class="modal-placeholder">
-            🎮 Здесь скоро появятся новые опции...
+        <div class="settings-option">
+            <div class="settings-label">
+                <span>🔊</span> Звуки
+            </div>
+            <div class="toggle-switch" id="soundToggle">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="settings-option">
+            <div class="settings-label">
+                <span>🎵</span> Музыка
+            </div>
+            <div class="toggle-switch" id="musicToggle">
+                <div class="toggle-slider"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -555,6 +569,9 @@
     let musicSource = null;
     let musicGainNode = null;
     
+    let soundsEnabled = true;
+    let musicEnabled = true;
+    
     const totalSpan = document.getElementById('totalClicks');
     const cpsSpan = document.getElementById('clicksPerSec');
     const clickUpgradeLevelSpan = document.getElementById('clickUpgradeLevel');
@@ -563,17 +580,21 @@
     const cpsUpgradePriceSpan = document.getElementById('cpsUpgradePrice');
     const buyClickBtn = document.getElementById('buyClickUpgradeBtn');
     const buyCpsBtn = document.getElementById('buyCpsUpgradeBtn');
-    const mainBtn = document.getElementById('mainLoveBtn');
+    const mainClicker = document.getElementById('mainClicker');
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsModal = document.getElementById('settingsModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
+    const inventoryBtn = document.getElementById('inventoryBtn');
+    const casesBtn = document.getElementById('casesBtn');
+    const soundToggle = document.getElementById('soundToggle');
+    const musicToggle = document.getElementById('musicToggle');
     
     function initAudio() {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             createBackgroundMusic();
         }
-        if (audioContext.state === 'suspended') {
+        if (audioContext.state === 'suspended' && musicEnabled) {
             audioContext.resume();
         }
     }
@@ -615,7 +636,7 @@
     }
     
     function playBackgroundMusic() {
-        if (!audioContext || !musicBuffer || isMusicPlaying) return;
+        if (!audioContext || !musicBuffer || !musicEnabled || isMusicPlaying) return;
         if (musicSource) {
             try {
                 musicSource.stop();
@@ -632,14 +653,25 @@
         isMusicPlaying = true;
     }
     
+    function stopBackgroundMusic() {
+        if (musicSource) {
+            try {
+                musicSource.stop();
+            } catch(e) {}
+            musicSource = null;
+        }
+        isMusicPlaying = false;
+    }
+    
     function playClickSound() {
+        if (!soundsEnabled) return;
         if (!audioContext) {
             initAudio();
         }
         if (!audioContext) return;
         const now = audioContext.currentTime;
         const gainNode = audioContext.createGain();
-        gainNode.gain.value = 0.1;
+        gainNode.gain.value = 0.12;
         gainNode.connect(audioContext.destination);
         
         const osc = audioContext.createOscillator();
@@ -649,17 +681,18 @@
         osc.start();
         
         const osc2 = audioContext.createOscillator();
-        osc2.frequency.value = 440;
+        osc2.frequency.value = 540;
         osc2.type = 'sine';
         osc2.connect(gainNode);
-        osc2.start(now + 0.02);
+        osc2.start(now + 0.015);
         
         gainNode.gain.exponentialRampToValueAtTime(0.00001, now + 0.12);
         osc.stop(now + 0.1);
-        osc2.stop(now + 0.12);
+        osc2.stop(now + 0.1);
     }
     
     function playPurchaseSound() {
+        if (!soundsEnabled) return;
         if (!audioContext) {
             initAudio();
         }
@@ -698,7 +731,9 @@
             clickUpgradeLevel: clickUpgradeLevel,
             cpsUpgradeLevel: cpsUpgradeLevel,
             currentClickPrice: currentClickPrice,
-            currentCpsPrice: currentCpsPrice
+            currentCpsPrice: currentCpsPrice,
+            soundsEnabled: soundsEnabled,
+            musicEnabled: musicEnabled
         };
         localStorage.setItem('clickerSave', JSON.stringify(saveData));
     }
@@ -715,7 +750,23 @@
                 cpsUpgradeLevel = data.cpsUpgradeLevel || 0;
                 currentClickPrice = data.currentClickPrice || 200;
                 currentCpsPrice = data.currentCpsPrice || 200;
+                soundsEnabled = data.soundsEnabled !== undefined ? data.soundsEnabled : true;
+                musicEnabled = data.musicEnabled !== undefined ? data.musicEnabled : true;
             } catch(e) {}
+        }
+        updateToggleUI();
+    }
+    
+    function updateToggleUI() {
+        if (soundsEnabled) {
+            soundToggle.classList.add('active');
+        } else {
+            soundToggle.classList.remove('active');
+        }
+        if (musicEnabled) {
+            musicToggle.classList.add('active');
+        } else {
+            musicToggle.classList.remove('active');
         }
     }
     
@@ -831,26 +882,7 @@
         }
     }
     
-    function checkAndShake() {
-        const clickCount = Math.floor(totalClicks);
-        if (clickCount === 67 || clickCount === 167 || clickCount === 267 || clickCount === 367 || clickCount === 467 || clickCount === 567 || clickCount === 667 || clickCount === 767 || clickCount === 867 || clickCount === 967 || clickCount === 1067 || clickCount === 1167 || clickCount === 1267 || clickCount === 1367) {
-            document.body.classList.add('shake-effect');
-            setTimeout(() => {
-                document.body.classList.remove('shake-effect');
-            }, 400);
-        }
-    }
-    
-    let lastShakeValue = Math.floor(totalClicks);
-    function monitorShake() {
-        const current = Math.floor(totalClicks);
-        if (current !== lastShakeValue) {
-            checkAndShake();
-            lastShakeValue = current;
-        }
-    }
-    
-    function onMainTap(event) {
+    function onMainClick(event) {
         let clientX, clientY;
         if (event.touches) {
             const touch = event.touches[0];
@@ -864,7 +896,6 @@
         
         const gained = addClicks(1, false);
         createHeartExplosion(clientX, clientY);
-        monitorShake();
         
         if (window.navigator && window.navigator.vibrate) {
             window.navigator.vibrate(30);
@@ -877,7 +908,7 @@
         plus.style.top = `${clientY - 35}px`;
         plus.style.fontSize = '1.7rem';
         plus.style.fontWeight = 'bold';
-        plus.style.color = '#e87c5e';
+        plus.style.color = '#27ae60';
         plus.style.textShadow = '0 0 5px white';
         plus.style.pointerEvents = 'none';
         plus.style.zIndex = '9998';
@@ -890,25 +921,43 @@
         }, 10);
     }
     
-    let passiveInterval = null;
     function startPassiveIncome() {
-        if (passiveInterval) clearInterval(passiveInterval);
-        passiveInterval = setInterval(() => {
+        setInterval(() => {
             if (passiveIncome > 0) {
                 totalClicks += passiveIncome;
                 updateUI();
                 updateCPSDisplay();
                 saveGame();
-                monitorShake();
             }
         }, 1000);
     }
     
     async function startMusicAutomatically() {
+        if (!musicEnabled) return;
         initAudio();
         if (audioContext) {
             await audioContext.resume();
             playBackgroundMusic();
+        }
+    }
+    
+    function toggleSounds() {
+        soundsEnabled = !soundsEnabled;
+        updateToggleUI();
+        saveGame();
+        showFloatingMessage(soundsEnabled ? "🔊 Звуки включены" : "🔇 Звуки выключены", "#e87c5e");
+    }
+    
+    function toggleMusic() {
+        musicEnabled = !musicEnabled;
+        updateToggleUI();
+        saveGame();
+        if (musicEnabled) {
+            startMusicAutomatically();
+            showFloatingMessage("🎵 Музыка включена", "#e87c5e");
+        } else {
+            stopBackgroundMusic();
+            showFloatingMessage("⏸️ Музыка выключена", "#e87c5e");
         }
     }
     
@@ -917,10 +966,6 @@
         updateUI();
         updateCPSDisplay();
         startPassiveIncome();
-        
-        mainBtn.style.backgroundColor = '#e87c5e';
-        lastShakeValue = Math.floor(totalClicks);
-        checkAndShake();
         
         buyClickBtn.onclick = (e) => {
             e.stopPropagation();
@@ -940,23 +985,40 @@
             settingsModal.style.display = 'none';
         };
         
+        inventoryBtn.onclick = () => {
+            showFloatingMessage("📦 Инвентарь скоро будет доступен!", "#e87c5e");
+        };
+        
+        casesBtn.onclick = () => {
+            showFloatingMessage("🎁 Кейсы откроются в следующем обновлении!", "#e87c5e");
+        };
+        
+        soundToggle.onclick = (e) => {
+            e.stopPropagation();
+            toggleSounds();
+        };
+        
+        musicToggle.onclick = (e) => {
+            e.stopPropagation();
+            toggleMusic();
+        };
+        
         window.onclick = (e) => {
             if (e.target === settingsModal) {
                 settingsModal.style.display = 'none';
             }
         };
         
-        mainBtn.onclick = (e) => {
-            onMainTap(e);
+        mainClicker.onclick = (e) => {
+            onMainClick(e);
         };
-        mainBtn.ontouchstart = (e) => {
+        mainClicker.ontouchstart = (e) => {
             e.preventDefault();
-            onMainTap(e);
+            onMainClick(e);
         };
         
         setInterval(() => {
             updateCPSDisplay();
-            monitorShake();
         }, 300);
         
         startMusicAutomatically();
